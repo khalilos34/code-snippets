@@ -1,8 +1,17 @@
+"use client";
+import { useFormState } from "react-dom";
 import { createNewSnippet } from "@/lib/snippets.action";
+import Link from "next/link";
 
 const CreateSnippetPage = () => {
+  const [formState, action] = useFormState(createNewSnippet, { message: "" });
   return (
-    <form action={createNewSnippet}>
+    <form action={action}>
+      <div>
+        <Link href={"/"} className=" text-blue-500 underline">
+          Back to home
+        </Link>
+      </div>
       <div className="flex flex-col  gap-4">
         <h3 className="m-3 font-bold">Create New Snippet</h3>
 
@@ -27,6 +36,11 @@ const CreateSnippetPage = () => {
             className="w-full rounded-sm border p-2"
           />
         </div>
+        {formState.message && (
+          <div className="rounded border border-red-500 bg-red-400 p-4">
+            {formState.message}
+          </div>
+        )}
 
         <button type="submit" className="rounded border bg-blue-200 p-2">
           create
