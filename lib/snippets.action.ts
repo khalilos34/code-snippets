@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/config";
+import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 
 export const createNewSnippet = async (
@@ -15,13 +16,13 @@ export const createNewSnippet = async (
   if (code.length < 10 || typeof code !== "string") {
     return { message: "Code must be at least 10 characters" };
   }
-  const newSnippet = await db.snippet.create({
+  await db.snippet.create({
     data: {
       title,
       code,
     },
   });
-
+  revalidatePath("/");
   redirect("/");
 };
 
@@ -50,8 +51,9 @@ export const SnippetUpdate = async (id: number, code: string) => {
   redirect(`/snippets/${id}`);
 };
 export const deleteSnippet = async (id: number) => {
-  const deletedSnippet = await db.snippet.delete({
+  await db.snippet.delete({
     where: { id },
   });
+  revalidatePath("/");
   redirect("/");
 };
